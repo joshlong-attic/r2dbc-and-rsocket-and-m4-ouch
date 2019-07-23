@@ -40,12 +40,20 @@ public class R2dbcApplication {
 
 }
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class Greeting {
+	private String message;
+}
+
+
 @Controller
 class RSocketGreetings {
 
 	@MessageMapping("hi")
-	String hi() {
-		return "hello world!";
+	Flux<Greeting > hi() {
+		return Flux.just( new Greeting( "hello world!"));
 	}
 }
 
