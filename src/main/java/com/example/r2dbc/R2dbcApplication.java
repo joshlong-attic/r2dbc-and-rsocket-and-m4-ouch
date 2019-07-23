@@ -1,12 +1,10 @@
 package com.example.r2dbc;
 
-import io.r2dbc.spi.ConnectionFactories;
-import io.r2dbc.spi.ConnectionFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -28,10 +26,12 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @SpringBootApplication
 public class R2dbcApplication {
 
+/*
 	@Bean
 	ConnectionFactory connectionFactory(@Value("${spring.r2dbc.url}") String url) {
 		return ConnectionFactories.get(url);
 	}
+*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(R2dbcApplication.class, args);
@@ -43,8 +43,8 @@ public class R2dbcApplication {
 @Controller
 class RSocketGreetings {
 
-	@MessageMapping ("hi")
-	String hi (){
+	@MessageMapping("hi")
+	String hi() {
 		return "hello world!";
 	}
 }
@@ -61,6 +61,7 @@ class HttpGreetings {
 }
 
 @Component
+@Log4j2
 @RequiredArgsConstructor
 class Initializer {
 
@@ -75,7 +76,7 @@ class Initializer {
 				.just("A", "B", "C", "D")
 				.flatMap(n -> this.repository.save(new Reservation(null, n))))
 			.thenMany(this.repository.findAll())
-			.subscribe();
+			.subscribe(log::info);
 	}
 }
 
